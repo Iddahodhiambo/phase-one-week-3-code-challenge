@@ -31,6 +31,7 @@ function renderSingleFilm(film){
     
     //available tickets
     const paragraphAvailableTickets = document.createElement('p');
+    paragraphAvailableTickets.setAttribute('id','tickets');
     const availableTickets = film.capacity - film.tickets_sold;
     paragraphAvailableTickets.innerHTML = "<b>Available tickets: </b>"+availableTickets;
     
@@ -43,15 +44,38 @@ function renderSingleFilm(film){
     img.setAttribute("height", "300");
     img.setAttribute("width", "300");
 
-    ;divFilmContents.appendChild(img)
-    }
-    //fetch film list
+    divFilmContents.appendChild(img)
+
+    
+    //button
+    const button = document.createElement('button');
+   button.textContent = "Buy Ticket";
+    divFilmContents.appendChild(button);
+   button.addEventListener('click', function() {
+        const ticketText = document.getElementById('tickets').innerHTML;
+        
+        //get tickets as a substring of ticketText
+        const availableTickets = ticketText.substring(26);
+        if(availableTickets <= 0) {
+            alert("sold out");
+        }
+        else{
+            const remainingTickets =availableTickets - 1;
+        //alert(availableTickets);
+        document.getElementById('tickets').innerHTML = "<b>Available tickets: </b>" + remainingTickets;
+        alert("You successfully bought a ticket")
+            
+        }
+
+    })
+}
+     //fetch film list
     
 function fetchFilmsList() {
     fetch('http://localhost:3000/films/').then((response) => response.json()).then((films)=>renderFilmsList(films));
 }
 
-//display film list
+//display film details  
     function renderFilmsList(films) {
         films.forEach(film => {
             const filmList =document.getElementById('sidebar')
@@ -63,31 +87,15 @@ function fetchFilmsList() {
                 a.className = "active";
             }
             a.onclick = function() {
-               // alert("you clicked "+ film.id);
-               //The Giant Gila Monster
+               
                fetchSingleFilm(film.id);
             };
             filmList.appendChild(a);
 
-            
-
-            
-            
-            
-            
-            
-
         });
       }
       
-      
-    
-    
-     
-      
-      
-
-      document.addEventListener('DOMContentLoaded', (event) => {
+    document.addEventListener('DOMContentLoaded', (event) => {
         fetchSingleFilm(1);
         fetchFilmsList();
       });
