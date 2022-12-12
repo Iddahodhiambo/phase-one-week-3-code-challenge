@@ -1,5 +1,6 @@
 //alert('rendering renderFilmsList');
 //fetch single film
+let activeLink = "movieLink1";
 function fetchSingleFilm(id){
     let url = 'http://localhost:3000/films/'+id;
     fetch(url).then((response) => response.json()).then((film)=>renderSingleFilm(film));
@@ -8,6 +9,9 @@ function fetchSingleFilm(id){
 function renderSingleFilm(film){
     const divFilmContents = document.getElementById('film-content');
     divFilmContents.innerHTML = "";
+    const h1 = document.createElement('h1');
+    h1.innerHTML = "Flatdango movie app";
+    divFilmContents.append(h1);
     //title
     const h2 = document.createElement('h2')
     h2.innerHTML = film.title;
@@ -45,10 +49,12 @@ function renderSingleFilm(film){
     img.setAttribute("width", "300");
 
     divFilmContents.appendChild(img)
+    //add break element
 
     
     //button
     const button = document.createElement('button');
+    
    button.textContent = "Buy Ticket";
     divFilmContents.appendChild(button);
    button.addEventListener('click', function() {
@@ -66,6 +72,7 @@ function renderSingleFilm(film){
         alert("You successfully bought a ticket")
             
         }
+        
 
     })
 }
@@ -87,9 +94,21 @@ function fetchFilmsList() {
                 a.className = "active";
             }
             a.onclick = function() {
+
+                //deactivate active link
+            const toDeactivate =document.getElementById(activeLink);
+            toDeactivate.removeAttribute('class');
+
+            //activate clicked link
+            activeLink = "movieLink"+ film.id;
+            const toActivate = document.getElementById(activeLink);
+            toActivate.className = "active";
+
                
-               fetchSingleFilm(film.id);
+            fetchSingleFilm(film.id);
             };
+            const id = "movieLink" + film.id;
+            a.setAttribute('id',id);
             filmList.appendChild(a);
 
         });
